@@ -11,10 +11,35 @@ public class Character : MonoBehaviour
     [HideInInspector] public HealthSystem healthSystem;
 
     #region Character State
-    public foodState FoodState { get; set; }
-    public healthState HealthState { get; set; }
-    public survivalState SurvivalState { get; set; }
+    public foodState foodState { get; set; }
+    public healthState healthState { get; set; }
+    public survivalState survivalState { get; set; }
     #endregion
+
+    /// <summary>
+    /// Indique que le personnage doit mourrir 
+    /// </summary>
+    public virtual void Death()
+    {
+        healthState = healthState.dead;
+        survivalState = survivalState.critical;
+        HealthStateChanged();
+    }
+    /// <summary>
+    /// Indique un changment sur l'état "Santé" du personnage
+    /// </summary>
+    public virtual void HealthStateChanged()
+    {
+
+    }
+    /// <summary>
+    /// Indique un changment sur l'état "Rasssié" du personnage
+    /// </summary>
+    public virtual void FoodStateChanged()
+    {
+
+    }
+
 }
 
 #region Enum Character State
@@ -36,6 +61,7 @@ public enum healthState
 
 public enum survivalState
 {
+    high,
     normal,
     critical
 }
