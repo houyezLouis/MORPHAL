@@ -6,6 +6,7 @@ public class HealthSystem : MonoBehaviour
 {
     private Character owner;
     public int currentHealt { get; private set; }
+    public float lifeRemainingRatio { get; private set; }
     public int maxHealth;
 
     private void OnEnable()
@@ -15,30 +16,40 @@ public class HealthSystem : MonoBehaviour
         {
             owner.healthSystem = this;
         }
+        ResetComponent();
     }
 
-    private void TakeDamage(int amount)
+    public void CalculateDamage(int amount)
     {
-        float lifeRemainingRatio = (float)currentHealt / (float)maxHealth;
+        currentHealt -= amount;
+         lifeRemainingRatio = (float)currentHealt / (float)maxHealth;
         if (currentHealt < 1)
         {
             owner.Death();
+            currentHealt = 0;
         }
         else
         {
             if (lifeRemainingRatio > 0.75f)
             {
-                owner.healthState = healthState.high;
+                owner.healthState = HealthState.high;
             }
             else if (lifeRemainingRatio > 0.25f)
             {
-                owner.healthState = healthState.normal;
+                owner.healthState = HealthState.normal;
             }
             else
             {
-                owner.healthState = healthState.low;
+                owner.healthState = HealthState.low;
             }
+            owner.HealthStateChanged();
         }
+    }
 
+    public void ResetComponent()
+    {
+        currentHealt = maxHealth;
+        owner.HealthStateChanged();
     }
 }
+
